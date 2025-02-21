@@ -74,30 +74,33 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   }));
 
   return (
-    <div ref={setNodeRef} className="ml-64 flex-1 min-h-screen p-8 bg-gray-50">
-      <GridLayout
-        className="layout"
-        layout={layout}
-        cols={12}
-        rowHeight={30}
-        width={1200}
-        margin={[20, 20]}
-        onLayoutChange={(newLayout) => {
-          newLayout.forEach((item) => {
-            onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
-          });
-        }}
-        resizeHandles={['se']}
-      >
-        {widgets.map((widget) => (
-          <div
-            key={widget.id}
-            className="border border-gray-200 hover:border-blue-500 rounded-lg transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
-          >
-            {renderWidget(widget)}
-          </div>
-        ))}
-      </GridLayout>
+    <div className="flex flex-1 min-h-screen">
+      <div className="w-64 border-r-2 border-dashed border-gray-300" />
+      <div ref={setNodeRef} className="flex-1 p-8 bg-gray-50">
+        <GridLayout
+          className="layout"
+          layout={layout}
+          cols={12}
+          rowHeight={30}
+          width={1200}
+          margin={[20, 20]}
+          onLayoutChange={(newLayout) => {
+            newLayout.forEach((item) => {
+              onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
+            });
+          }}
+          resizeHandles={['se']}
+        >
+          {widgets.map((widget) => (
+            <div
+              key={widget.id}
+              className="border border-gray-200 hover:border-blue-500 rounded-lg transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden cursor-move"
+            >
+              {renderWidget(widget)}
+            </div>
+          ))}
+        </GridLayout>
+      </div>
     </div>
   );
 };

@@ -17,6 +17,11 @@ export const ButtonWidget = ({ content, onChange, onDelete }: ButtonWidgetProps)
     onChange({ ...content, text });
   };
 
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  };
+
   return (
     <div className="group relative p-5">
       {isEditing ? (
@@ -31,6 +36,7 @@ export const ButtonWidget = ({ content, onChange, onDelete }: ButtonWidgetProps)
       ) : (
         <div className="relative">
           <button
+            onDoubleClick={handleDoubleClick}
             className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
             {text}

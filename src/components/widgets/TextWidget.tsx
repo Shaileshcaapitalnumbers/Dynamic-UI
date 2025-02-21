@@ -25,6 +25,11 @@ export const TextWidget = ({ content, onChange, onDelete }: TextWidgetProps) => 
     onChange({ text });
   };
 
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  };
+
   return (
     <div className="group relative p-5">
       {isEditing ? (
@@ -39,10 +44,10 @@ export const TextWidget = ({ content, onChange, onDelete }: TextWidgetProps) => 
       ) : (
         <div className="relative">
           <div 
-            onClick={() => setIsEditing(true)} 
+            onDoubleClick={handleDoubleClick}
             className="cursor-text whitespace-pre-wrap"
           >
-            {content.text || 'Click to edit text'}
+            {content.text || 'Double-click to edit text'}
           </div>
           <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
             <button
