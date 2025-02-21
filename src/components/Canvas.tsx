@@ -69,8 +69,8 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     i: widget.id,
     x: widget.position.x || 0,
     y: widget.position.y || 0,
-    w: widget.size?.w || 6,
-    h: widget.size?.h || 4,
+    w: widget.size?.w || 4,
+    h: widget.size?.h || 2,
   }));
 
   return (
@@ -79,18 +79,20 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
         className="layout"
         layout={layout}
         cols={12}
-        rowHeight={50}
+        rowHeight={30}
         width={1200}
+        margin={[20, 20]}
         onLayoutChange={(newLayout) => {
           newLayout.forEach((item) => {
             onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
           });
         }}
+        resizeHandles={['se']}
       >
         {widgets.map((widget) => (
           <div
             key={widget.id}
-            className="border-2 border-transparent hover:border-blue-500 rounded-lg cursor-move transition-all duration-200 bg-white shadow-sm hover:shadow-md"
+            className="border border-gray-200 hover:border-blue-500 rounded-lg transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
           >
             {renderWidget(widget)}
           </div>

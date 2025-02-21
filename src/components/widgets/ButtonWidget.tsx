@@ -18,7 +18,7 @@ export const ButtonWidget = ({ content, onChange, onDelete }: ButtonWidgetProps)
   };
 
   return (
-    <div className="group relative p-4">
+    <div className="group relative p-5">
       {isEditing ? (
         <input
           type="text"
@@ -29,19 +29,28 @@ export const ButtonWidget = ({ content, onChange, onDelete }: ButtonWidgetProps)
           autoFocus
         />
       ) : (
-        <button
-          onClick={() => setIsEditing(true)}
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-        >
-          {text}
-        </button>
+        <div className="relative">
+          <button
+            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          >
+            {text}
+          </button>
+          <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="p-1 text-blue-500 hover:text-blue-600"
+            >
+              Edit
+            </button>
+            <button
+              onClick={onDelete}
+              className="p-1 text-red-500 hover:text-red-600"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       )}
-      <button
-        onClick={onDelete}
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-500 hover:text-red-500"
-      >
-        ×
-      </button>
     </div>
   );
 };
