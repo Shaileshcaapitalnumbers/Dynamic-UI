@@ -70,6 +70,10 @@ const Index = () => {
     }
   };
 
+  const handleLayoutChange = (id: string, position: { x: number; y: number }, size?: { w: number; h: number }) => {
+    updateWidget(id, { position, ...(size && { size }) });
+  };
+
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex min-h-screen bg-gray-50">
@@ -92,6 +96,7 @@ const Index = () => {
           widgets={widgets}
           onWidgetChange={updateWidget}
           onWidgetDelete={deleteWidget}
+          onLayoutChange={handleLayoutChange}
         />
       </div>
     </DndContext>

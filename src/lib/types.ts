@@ -6,6 +6,7 @@ export interface Widget {
   type: WidgetType;
   content: any;
   position: { x: number; y: number };
+  size?: { w: number; h: number };
 }
 
 export interface TextContent {
