@@ -8,11 +8,15 @@ interface TableWidgetProps {
   onDelete: () => void;
 }
 
+type CellType = 'text' | 'image';
+
 export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) => {
-  const [rows, setRows] = useState(content.rows || [[{ type: 'text', content: '' }]]);
+  const [rows, setRows] = useState<Array<Array<{ type: CellType; content: string }>>>(
+    content.rows || [[{ type: 'text' as CellType, content: '' }]]
+  );
   const [columns, setColumns] = useState(content.columns || 1);
 
-  const handleCellChange = (rowIndex: number, colIndex: number, value: string, type: 'text' | 'image') => {
+  const handleCellChange = (rowIndex: number, colIndex: number, value: string, type: CellType) => {
     const newRows = [...rows];
     newRows[rowIndex][colIndex] = { type, content: value };
     setRows(newRows);
@@ -20,13 +24,14 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
   };
 
   const addRow = () => {
-    const newRow = Array(columns).fill({ type: 'text', content: '' });
-    setRows([...rows, newRow]);
-    onChange({ rows: [...rows, newRow], columns });
+    const newRow = Array(columns).fill(null).map(() => ({ type: 'text' as CellType, content: '' }));
+    const newRows = [...rows, newRow];
+    setRows(newRows);
+    onChange({ rows: newRows, columns });
   };
 
   const addColumn = () => {
-    const newRows = rows.map(row => [...row, { type: 'text', content: '' }]);
+    const newRows = rows.map(row => [...row, { type: 'text' as CellType, content: '' }]);
     setRows(newRows);
     setColumns(columns + 1);
     onChange({ rows: newRows, columns: columns + 1 });
@@ -53,7 +58,7 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
                         />
                         <select
                           value={cell.type}
-                          onChange={(e) => handleCellChange(rowIndex, colIndex, cell.content, e.target.value as 'text' | 'image')}
+                          onChange={(e) => handleCellChange(rowIndex, colIndex, cell.content, e.target.value as CellType)}
                           className="p-1 border rounded"
                         >
                           <option value="text">Text</option>
