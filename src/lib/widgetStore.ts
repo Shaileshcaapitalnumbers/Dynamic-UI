@@ -1,5 +1,5 @@
 
-import create from 'zustand';
+import { create } from 'zustand';
 import { Widget } from './types';
 
 interface WidgetState {
