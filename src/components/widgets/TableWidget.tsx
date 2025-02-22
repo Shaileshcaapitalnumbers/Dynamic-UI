@@ -6,11 +6,13 @@ interface TableWidgetProps {
   content: TableContent;
   onChange: (content: TableContent) => void;
   onDelete: () => void;
+  style?: any;
+  onStyleChange?: (style: any) => void;
 }
 
 type CellType = 'text' | 'image';
 
-export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) => {
+export const TableWidget = ({ content, onChange, onDelete, style, onStyleChange }: TableWidgetProps) => {
   const [rows, setRows] = useState<Array<Array<{ type: CellType; content: string }>>>(
     content.rows || [[{ type: 'text' as CellType, content: '' }]]
   );
@@ -40,6 +42,35 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
 
   return (
     <div className="group relative p-4">
+      {/* Style controls */}
+      <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2 z-10">
+        <div className="bg-white p-2 rounded shadow-lg">
+          <input
+            type="color"
+            value={style?.backgroundColor || '#ffffff'}
+            onChange={(e) => onStyleChange?.({ ...style, backgroundColor: e.target.value })}
+            className="mb-2"
+          />
+          <input
+            type="color"
+            value={style?.borderColor || '#e5e7eb'}
+            onChange={(e) => onStyleChange?.({ ...style, borderColor: e.target.value })}
+          />
+        </div>
+        <button
+          onClick={addRow}
+          className="px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+        >
+          Add Row
+        </button>
+        <button
+          onClick={addColumn}
+          className="px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+        >
+          Add Column
+        </button>
+      </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <tbody className="bg-white divide-y divide-gray-200">
@@ -48,14 +79,14 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
                 {row.map((cell, colIndex) => (
                   <td
                     key={colIndex}
-                    className="relative p-2 border"
+                    className="relative p-2 border min-h-[40px]"
                     onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                     onMouseLeave={() => setHoveredCell(null)}
                   >
                     {cell.type === 'image' && cell.content ? (
                       <img src={cell.content} alt="cell content" className="max-h-20" />
                     ) : (
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 min-h-[32px]">
                         <input
                           type="text"
                           value={cell.content}
@@ -80,26 +111,6 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
             ))}
           </tbody>
         </table>
-      </div>
-      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2 top-2 right-2">
-        <button
-          onClick={addRow}
-          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Add Row
-        </button>
-        <button
-          onClick={addColumn}
-          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Add Column
-        </button>
-        <button
-          onClick={onDelete}
-          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-        >
-          Delete
-        </button>
       </div>
     </div>
   );

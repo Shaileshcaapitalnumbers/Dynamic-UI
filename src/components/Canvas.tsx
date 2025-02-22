@@ -70,9 +70,9 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   const getDefaultRowHeight = (widget: Widget) => {
     switch (widget.type) {
       case 'image':
-        return 4;
+        return 8; // Increased height for images
       case 'table':
-        return Math.max(2, widget.content.rows.length + 1);
+        return widget.content.rows ? widget.content.rows.length * 2 + 2 : 4; // Better table height calculation
       default:
         return 2;
     }
@@ -103,20 +103,15 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
             });
           }}
           resizeHandles={['se']}
+          draggableHandle=".drag-handle" // Only allow dragging by handle
         >
           {widgets.map((widget) => (
             <div
               key={widget.id}
-              style={{
-                backgroundColor: widget.style?.backgroundColor,
-                color: widget.style?.textColor,
-                borderColor: widget.style?.borderColor,
-                borderWidth: widget.style?.borderWidth,
-                borderRadius: widget.style?.borderRadius,
-                padding: widget.style?.padding,
-              }}
-              className="border hover:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
+              onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
+              className="relative border hover:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
             >
+              <div className="drag-handle absolute top-0 left-0 right-0 h-6 bg-gray-50 cursor-move opacity-0 group-hover:opacity-100 transition-opacity" />
               {renderWidget(widget)}
             </div>
           ))}
