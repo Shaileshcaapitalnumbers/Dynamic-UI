@@ -17,7 +17,7 @@ import useWidgetStore from '@/lib/widgetStore';
 
 const Index = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const { widgets, addWidget, updateWidget, deleteWidget, undo, redo } = useWidgetStore();
+  const { widgets, addWidget, updateWidget, deleteWidget, clearWidgets, undo, redo } = useWidgetStore();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -89,6 +89,12 @@ const Index = () => {
             className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
           >
             Redo
+          </button>
+          <button
+            onClick={clearWidgets}
+            className="px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:shadow-md transition-shadow hover:bg-red-600"
+          >
+            Clear Widgets
           </button>
         </div>
         <WidgetPanel onDragStart={(type) => console.log('Dragging', type)} />
