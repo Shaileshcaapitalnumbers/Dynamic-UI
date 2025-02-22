@@ -7,6 +7,7 @@ export interface Widget {
   content: any;
   position: { x: number; y: number };
   size?: { w: number; h: number };
+  isEditing?: boolean;
 }
 
 export interface TextContent {

@@ -15,6 +15,7 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
     content.rows || [[{ type: 'text' as CellType, content: '' }]]
   );
   const [columns, setColumns] = useState(content.columns || 1);
+  const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null);
 
   const handleCellChange = (rowIndex: number, colIndex: number, value: string, type: CellType) => {
     const newRows = [...rows];
@@ -43,9 +44,14 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
         <table className="min-w-full divide-y divide-gray-200">
           <tbody className="bg-white divide-y divide-gray-200">
             {rows.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+              <tr key={rowIndex} className="hover:bg-gray-50">
                 {row.map((cell, colIndex) => (
-                  <td key={colIndex} className="p-2 border">
+                  <td
+                    key={colIndex}
+                    className="relative p-2 border"
+                    onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
+                    onMouseLeave={() => setHoveredCell(null)}
+                  >
                     {cell.type === 'image' && cell.content ? (
                       <img src={cell.content} alt="cell content" className="max-h-20" />
                     ) : (
@@ -56,14 +62,16 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
                           onChange={(e) => handleCellChange(rowIndex, colIndex, e.target.value, cell.type)}
                           className="w-full p-1 border rounded"
                         />
-                        <select
-                          value={cell.type}
-                          onChange={(e) => handleCellChange(rowIndex, colIndex, cell.content, e.target.value as CellType)}
-                          className="p-1 border rounded"
-                        >
-                          <option value="text">Text</option>
-                          <option value="image">Image</option>
-                        </select>
+                        {hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex && (
+                          <select
+                            value={cell.type}
+                            onChange={(e) => handleCellChange(rowIndex, colIndex, cell.content, e.target.value as CellType)}
+                            className="absolute top-0 right-0 p-1 border rounded bg-white shadow-sm"
+                          >
+                            <option value="text">Text</option>
+                            <option value="image">Image</option>
+                          </select>
+                        )}
                       </div>
                     )}
                   </td>
@@ -73,7 +81,7 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
           </tbody>
         </table>
       </div>
-      <div className="mt-4 flex gap-2">
+      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2 top-2 right-2">
         <button
           onClick={addRow}
           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -86,13 +94,13 @@ export const TableWidget = ({ content, onChange, onDelete }: TableWidgetProps) =
         >
           Add Column
         </button>
+        <button
+          onClick={onDelete}
+          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Delete
+        </button>
       </div>
-      <button
-        onClick={onDelete}
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-500 hover:text-red-500"
-      >
-        ×
-      </button>
     </div>
   );
 };

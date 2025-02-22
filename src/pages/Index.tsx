@@ -49,6 +49,7 @@ const Index = () => {
         type,
         content: getDefaultContent(type),
         position: { x: 0, y: 0 },
+        isEditing: true // Start in editing mode
       };
 
       addWidget(newWidget);
@@ -58,11 +59,11 @@ const Index = () => {
   const getDefaultContent = (type: WidgetType) => {
     switch (type) {
       case 'text':
-        return { text: 'New Text' };
+        return { text: '' };
       case 'image':
         return { url: '', alt: '' };
       case 'button':
-        return { text: 'New Button', variant: 'primary' };
+        return { text: '', variant: 'primary' };
       case 'table':
         return { rows: [[{ type: 'text', content: '' }]], columns: 1 };
       default:
@@ -77,27 +78,31 @@ const Index = () => {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex min-h-screen bg-gray-50">
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-          <button
-            onClick={undo}
-            className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
-          >
-            Undo
-          </button>
-          <button
-            onClick={redo}
-            className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
-          >
-            Redo
-          </button>
-          <button
-            onClick={clearWidgets}
-            className="px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:shadow-md transition-shadow hover:bg-red-600"
-          >
-            Clear Widgets
-          </button>
+        <div className="fixed left-0 top-0 w-64 bg-white shadow-md z-20 p-4">
+          <div className="flex flex-col space-y-2 mb-4">
+            <button
+              onClick={undo}
+              className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
+            >
+              Undo
+            </button>
+            <button
+              onClick={redo}
+              className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
+            >
+              Redo
+            </button>
+            <button
+              onClick={clearWidgets}
+              className="px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:shadow-md transition-shadow hover:bg-red-600"
+            >
+              Clear Widgets
+            </button>
+          </div>
+          <div className="mt-4">
+            <WidgetPanel onDragStart={(type) => console.log('Dragging', type)} />
+          </div>
         </div>
-        <WidgetPanel onDragStart={(type) => console.log('Dragging', type)} />
         <Canvas
           widgets={widgets}
           onWidgetChange={updateWidget}
