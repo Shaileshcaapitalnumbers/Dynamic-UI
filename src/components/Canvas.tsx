@@ -27,6 +27,8 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
       key: widget.id,
       style: widget.style,
       onStyleChange: (style: any) => onWidgetChange(widget.id, { style }),
+      isEditing: widget.isEditing,
+      onEditingChange: (isEditing: boolean) => onWidgetChange(widget.id, { isEditing })
     };
 
     switch (widget.type) {
@@ -103,7 +105,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
             });
           }}
           resizeHandles={['se']}
-          draggableHandle=".drag-handle" // Only allow dragging by handle
+          isDraggable={true}
         >
           {widgets.map((widget) => (
             <div
@@ -111,7 +113,6 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
               onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
               className="relative border hover:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
             >
-              <div className="drag-handle absolute top-0 left-0 right-0 h-6 bg-gray-50 cursor-move opacity-0 group-hover:opacity-100 transition-opacity" />
               {renderWidget(widget)}
             </div>
           ))}

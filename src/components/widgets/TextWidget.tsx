@@ -6,10 +6,11 @@ interface TextWidgetProps {
   content: TextContent;
   onChange: (content: TextContent) => void;
   onDelete: () => void;
+  isEditing?: boolean;
+  onEditingChange: (isEditing: boolean) => void;
 }
 
-export const TextWidget = ({ content, onChange, onDelete }: TextWidgetProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+export const TextWidget = ({ content, onChange, onDelete, isEditing, onEditingChange }: TextWidgetProps) => {
   const [text, setText] = useState(content.text);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,13 +22,8 @@ export const TextWidget = ({ content, onChange, onDelete }: TextWidgetProps) => 
   }, [text, isEditing]);
 
   const handleBlur = () => {
-    setIsEditing(false);
+    onEditingChange(false);
     onChange({ text });
-  };
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsEditing(true);
   };
 
   return (
@@ -43,15 +39,12 @@ export const TextWidget = ({ content, onChange, onDelete }: TextWidgetProps) => 
         />
       ) : (
         <div className="relative">
-          <div 
-            onDoubleClick={handleDoubleClick}
-            className="cursor-text whitespace-pre-wrap"
-          >
+          <div className="cursor-text whitespace-pre-wrap">
             {content.text || 'Double-click to edit text'}
           </div>
-          <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+          <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={() => onEditingChange(true)}
               className="p-1 text-blue-500 hover:text-blue-600"
             >
               Edit
