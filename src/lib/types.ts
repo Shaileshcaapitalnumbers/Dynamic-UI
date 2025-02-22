@@ -1,6 +1,15 @@
 
 export type WidgetType = 'text' | 'image' | 'button' | 'table';
 
+export interface WidgetStyle {
+  backgroundColor: string;
+  textColor: string;
+  borderColor: string;
+  borderWidth: string;
+  borderRadius: string;
+  padding: string;
+}
+
 export interface Widget {
   id: string;
   type: WidgetType;
@@ -8,6 +17,7 @@ export interface Widget {
   position: { x: number; y: number };
   size?: { w: number; h: number };
   isEditing?: boolean;
+  style?: WidgetStyle;
 }
 
 export interface TextContent {

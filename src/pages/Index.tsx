@@ -49,11 +49,23 @@ const Index = () => {
         type,
         content: getDefaultContent(type),
         position: { x: 0, y: 0 },
-        isEditing: true // Start in editing mode
+        isEditing: true,
+        style: getDefaultStyle(type)
       };
 
       addWidget(newWidget);
     }
+  };
+
+  const getDefaultStyle = (type: WidgetType) => {
+    return {
+      backgroundColor: '#ffffff',
+      textColor: '#000000',
+      borderColor: '#e5e7eb',
+      borderWidth: '1px',
+      borderRadius: '0.375rem',
+      padding: '1rem'
+    };
   };
 
   const getDefaultContent = (type: WidgetType) => {
@@ -79,22 +91,24 @@ const Index = () => {
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex min-h-screen bg-gray-50">
         <div className="fixed left-0 top-0 w-64 bg-white shadow-md z-20 p-4">
-          <div className="flex flex-col space-y-2 mb-4">
-            <button
-              onClick={undo}
-              className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
-            >
-              Undo
-            </button>
-            <button
-              onClick={redo}
-              className="px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
-            >
-              Redo
-            </button>
+          <div className="mb-6">
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={undo}
+                className="flex-1 px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
+              >
+                Undo
+              </button>
+              <button
+                onClick={redo}
+                className="flex-1 px-4 py-2 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
+              >
+                Redo
+              </button>
+            </div>
             <button
               onClick={clearWidgets}
-              className="px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:shadow-md transition-shadow hover:bg-red-600"
+              className="w-full px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:shadow-md transition-shadow hover:bg-red-600"
             >
               Clear Widgets
             </button>

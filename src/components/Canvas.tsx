@@ -25,6 +25,8 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     const commonProps = {
       onDelete: () => onWidgetDelete(widget.id),
       key: widget.id,
+      style: widget.style,
+      onStyleChange: (style: any) => onWidgetChange(widget.id, { style }),
     };
 
     switch (widget.type) {
@@ -65,12 +67,23 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     }
   };
 
+  const getDefaultRowHeight = (widget: Widget) => {
+    switch (widget.type) {
+      case 'image':
+        return 4;
+      case 'table':
+        return Math.max(2, widget.content.rows.length + 1);
+      default:
+        return 2;
+    }
+  };
+
   const layout = widgets.map((widget) => ({
     i: widget.id,
     x: widget.position.x || 0,
     y: widget.position.y || 0,
     w: widget.size?.w || 4,
-    h: widget.size?.h || 2,
+    h: widget.size?.h || getDefaultRowHeight(widget),
   }));
 
   return (
@@ -94,7 +107,15 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           {widgets.map((widget) => (
             <div
               key={widget.id}
-              className="border border-gray-200 hover:border-blue-500 rounded-lg transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden cursor-move"
+              style={{
+                backgroundColor: widget.style?.backgroundColor,
+                color: widget.style?.textColor,
+                borderColor: widget.style?.borderColor,
+                borderWidth: widget.style?.borderWidth,
+                borderRadius: widget.style?.borderRadius,
+                padding: widget.style?.padding,
+              }}
+              className="border hover:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
             >
               {renderWidget(widget)}
             </div>
