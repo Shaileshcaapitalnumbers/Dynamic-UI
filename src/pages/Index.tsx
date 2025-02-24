@@ -9,7 +9,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { nanoid } from 'nanoid';
 import { WidgetPanel } from '@/components/WidgetPanel';
 import { Canvas } from '@/components/Canvas';
 import { Widget, WidgetType } from '@/lib/types';
@@ -40,7 +39,12 @@ const Index = () => {
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id as string);
   };
-
+  function nanoid(size = 21): string {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-';
+    const array = new Uint8Array(size);
+    crypto.getRandomValues(array);
+    return Array.from(array, (byte) => alphabet[byte % alphabet.length]).join('');
+  }
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     setActiveId(null);
 
