@@ -22,7 +22,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   });
 
   const [containerWidth, setContainerWidth] = useState(1200);
-
+  const [isDragging, setIsDragging] = useState(false);
   useEffect(() => {
     const updateWidth = () => {
       const container = document.getElementById('grid-container');
@@ -121,8 +121,29 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           margin={[20, 20]}
           containerPadding={[20, 20]}
           onLayoutChange={(newLayout) => {
-            newLayout.forEach((item) => {
-              onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
+            if (!isDragging) {
+              newLayout.forEach((item) => {
+                onLayoutChange(
+                  item.i,
+                  { x: item.x, y: item.y },
+                  { w: item.w, h: item.h }
+                );
+              });
+            }
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragStop={() => {
+            setIsDragging(false);
+            const currentLayout = layout.map((item) => ({
+              ...item,
+              isDragging: false,
+            }));
+            currentLayout.forEach((item) => {
+              onLayoutChange(
+                item.i,
+                { x: item.x, y: item.y },
+                { w: item.w, h: item.h }
+              );
             });
           }}
           resizeHandles={['se']}
