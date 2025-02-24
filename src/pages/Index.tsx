@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   DndContext,
@@ -22,13 +21,15 @@ const Index = () => {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 10,
+        distance: 20,
+        delay: 150,
+        tolerance: 5,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 5,
+        delay: 300,
+        tolerance: 8,
       },
     })
   );
@@ -47,7 +48,7 @@ const Index = () => {
       const newWidget: Widget = {
         id: nanoid(),
         type,
-        content: getDefaultContent(type),
+        content: getDefaultContent(type) as any,
         position: { x: 0, y: 0 },
         isEditing: true,
         style: getDefaultStyle(type)

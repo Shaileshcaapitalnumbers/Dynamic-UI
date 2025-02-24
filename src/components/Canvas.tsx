@@ -1,6 +1,5 @@
-
 import { useDroppable } from '@dnd-kit/core';
-import { Widget } from '@/lib/types';
+import { Widget, TextContent, ImageContent, ButtonContent, TableContent } from '@/lib/types';
 import { TextWidget } from './widgets/TextWidget';
 import { ImageWidget } from './widgets/ImageWidget';
 import { TableWidget } from './widgets/TableWidget';
@@ -8,6 +7,7 @@ import { ButtonWidget } from './widgets/ButtonWidget';
 import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import { useState } from 'react';
 
 interface CanvasProps {
   widgets: Widget[];
@@ -20,6 +20,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   const { setNodeRef } = useDroppable({
     id: 'canvas',
   });
+  const [isDragging, setIsDragging] = useState(false);
 
   const renderWidget = (widget: Widget) => {
     const commonProps = {
@@ -36,7 +37,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
         return (
           <TextWidget
             {...commonProps}
-            content={widget.content}
+            content={widget.content as TextContent}
             onChange={(content) => onWidgetChange(widget.id, { content })}
           />
         );
@@ -44,7 +45,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
         return (
           <ImageWidget
             {...commonProps}
-            content={widget.content}
+            content={widget.content as ImageContent}
             onChange={(content) => onWidgetChange(widget.id, { content })}
           />
         );
@@ -52,7 +53,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
         return (
           <TableWidget
             {...commonProps}
-            content={widget.content}
+            content={widget.content as TableContent}
             onChange={(content) => onWidgetChange(widget.id, { content })}
           />
         );
@@ -60,7 +61,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
         return (
           <ButtonWidget
             {...commonProps}
-            content={widget.content}
+            content={widget.content as ButtonContent}
             onChange={(content) => onWidgetChange(widget.id, { content })}
           />
         );
@@ -73,8 +74,10 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     switch (widget.type) {
       case 'image':
         return 8; // Increased height for images
-      case 'table':
-        return widget.content.rows ? widget.content.rows.length * 2 + 2 : 4; // Better table height calculation
+      case 'table': {
+        const tableContent = widget.content as TableContent;
+        return tableContent.rows ? tableContent.rows.length * 2 + 2 : 4; // Better table height calculation
+      }
       default:
         return 2;
     }
@@ -100,7 +103,20 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           width={1200}
           margin={[20, 20]}
           onLayoutChange={(newLayout) => {
-            newLayout.forEach((item) => {
+            if (!isDragging) {
+              newLayout.forEach((item) => {
+                onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
+              });
+            }
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragStop={() => {
+            setIsDragging(false);
+            const currentLayout = layout.map((item) => ({
+              ...item,
+              isDragging: false,
+            }));
+            currentLayout.forEach((item) => {
               onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
             });
           }}
