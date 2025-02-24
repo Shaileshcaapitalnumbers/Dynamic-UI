@@ -55,7 +55,7 @@ export const TextWidget = ({ content, onChange, onDelete, isEditing, onEditingCh
 
   const renderFormatControls = () => (
     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 bg-white shadow-lg rounded-lg p-2 z-10">
-      <div className="flex items-center gap-2 border-r pr-2">
+      {/* <div className="flex items-center gap-2 border-r pr-2">
         <input
           type="number"
           min="8"
@@ -104,7 +104,7 @@ export const TextWidget = ({ content, onChange, onDelete, isEditing, onEditingCh
         >
           <AlignRight size={16} />
         </button>
-      </div>
+      </div> */}
       <div className="border-l pl-2 flex gap-2">
         <button
           onClick={() => onEditingChange(true)}

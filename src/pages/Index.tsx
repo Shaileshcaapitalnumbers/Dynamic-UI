@@ -117,8 +117,8 @@ const Index = () => {
         {/* Desktop Sidebar Toggle */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="hidden md:flex fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors items-center justify-center"
-          aria-label="Toggle sidebar"
+          className={`hidden md:flex fixed top-4 ${isSidebarOpen?"left-72":"left-4"} z-50 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors items-center justify-center"
+          aria-label="Toggle sidebar`}
         >
           {isSidebarOpen ? (
             <ChevronLeft className="h-5 w-5 text-gray-600" />

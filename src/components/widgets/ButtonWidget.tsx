@@ -34,7 +34,7 @@ export const ButtonWidget = ({ content, onChange, onDelete, isEditing, onEditing
         <div className="relative flex-1 h-full p-4 flex items-center justify-center">
           <button
             className="w-full h-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center justify-center"
-            onClick={() => onEditingChange(true)}
+            // onClick={() => onEditingChange(true)}
           >
             {text}
           </button>

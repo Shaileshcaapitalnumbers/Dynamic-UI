@@ -68,7 +68,7 @@ export const TableWidget = ({ content, onChange, onDelete, style, onStyleChange 
         </button>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>

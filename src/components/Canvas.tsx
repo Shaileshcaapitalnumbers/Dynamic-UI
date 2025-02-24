@@ -154,7 +154,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           {widgets.map((widget) => (
             <div
               key={widget.id}
-              onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
+              // onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
               className={`
                 group relative border border-gray-200 transition-all duration-200
                 bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg
