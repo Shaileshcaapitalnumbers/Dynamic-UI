@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  rollupOptions: {
+    external: ["react-resizable/css/styles.css"],
+  },
   plugins: [
     react()
     ,
