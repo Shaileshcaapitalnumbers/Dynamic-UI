@@ -160,7 +160,7 @@ const Index = () => {
                   onClick={clearWidgets}
                   className="w-full px-4 py-2 bg-red-500 text-white rounded-lg shadow-sm hover:bg-red-600 transition-colors text-sm font-medium"
                 >
-                  Clear Widgets
+                  Clear Canvas
                 </button>
               </div>
             </div>
