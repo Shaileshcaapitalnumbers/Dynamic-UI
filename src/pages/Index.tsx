@@ -13,13 +13,13 @@ import { nanoid } from 'nanoid';
 import { WidgetPanel } from '@/components/WidgetPanel';
 import { Canvas } from '@/components/Canvas';
 import { Widget, WidgetType } from '@/lib/types';
-import useWidgetStore from '@/lib/widgetStore';
+import { useWidgets } from '@/contexts/WidgetContext';
 import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Index = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { widgets, addWidget, updateWidget, deleteWidget, clearWidgets, undo, redo } = useWidgetStore();
+  const { widgets, addWidget, updateWidget, deleteWidget, clearWidgets, undo, redo } = useWidgets();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -51,7 +51,7 @@ const Index = () => {
       const newWidget: Widget = {
         id: nanoid(),
         type,
-        content: getDefaultContent(type) as any,
+        content: getDefaultContent(type),
         position: { x: 0, y: 0 },
         isEditing: true,
         style: getDefaultStyle(type)
