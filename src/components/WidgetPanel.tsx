@@ -15,11 +15,13 @@ const widgets = [
 
 export const WidgetPanel = ({ onDragStart }: WidgetPanelProps) => {
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 w-48 bg-white/80 backdrop-blur-lg rounded-lg shadow-lg p-4 space-y-2">
-      <h2 className="text-lg font-semibold mb-4">Widgets</h2>
-      {widgets.map(({ type, label }) => (
-        <DraggableWidget key={type} type={type} label={label} />
-      ))}
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">Available Widgets</h2>
+      <div className="grid gap-3">
+        {widgets.map(({ type, label }) => (
+          <DraggableWidget key={type} type={type} label={label} />
+        ))}
+      </div>
     </div>
   );
 };
@@ -46,10 +48,12 @@ const DraggableWidget = ({ type, label }: DraggableWidgetProps) => {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow cursor-move"
+      className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md 
+                transition-all duration-200 cursor-move
+                hover:border-blue-500 active:scale-95"
       style={style}
     >
-      {label}
+      <span className="font-medium text-gray-700">{label}</span>
     </div>
   );
 };

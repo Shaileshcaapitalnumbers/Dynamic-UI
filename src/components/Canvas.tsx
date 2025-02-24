@@ -7,7 +7,7 @@ import { ButtonWidget } from './widgets/ButtonWidget';
 import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CanvasProps {
   widgets: Widget[];
@@ -20,7 +20,21 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   const { setNodeRef } = useDroppable({
     id: 'canvas',
   });
-  const [isDragging, setIsDragging] = useState(false);
+
+  const [containerWidth, setContainerWidth] = useState(1200);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const container = document.getElementById('grid-container');
+      if (container) {
+        setContainerWidth(container.offsetWidth - 40); // Account for padding
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   const renderWidget = (widget: Widget) => {
     const commonProps = {
@@ -92,42 +106,39 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
   }));
 
   return (
-    <div className="flex flex-1 min-h-screen">
-      <div className="w-64 border-r-2 border-dashed border-gray-300" />
-      <div ref={setNodeRef} className="flex-1 p-8 bg-gray-50">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8">
+      <div 
+        id="grid-container"
+        ref={setNodeRef}
+        className="bg-white rounded-xl shadow-sm min-h-[calc(100vh-4rem)] mx-auto max-w-[1920px] p-5"
+      >
         <GridLayout
           className="layout"
           layout={layout}
           cols={12}
           rowHeight={30}
-          width={1200}
+          width={containerWidth}
           margin={[20, 20]}
+          containerPadding={[20, 20]}
           onLayoutChange={(newLayout) => {
-            if (!isDragging) {
-              newLayout.forEach((item) => {
-                onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
-              });
-            }
-          }}
-          onDragStart={() => setIsDragging(true)}
-          onDragStop={() => {
-            setIsDragging(false);
-            const currentLayout = layout.map((item) => ({
-              ...item,
-              isDragging: false,
-            }));
-            currentLayout.forEach((item) => {
+            newLayout.forEach((item) => {
               onLayoutChange(item.i, { x: item.x, y: item.y }, { w: item.w, h: item.h });
             });
           }}
           resizeHandles={['se']}
           isDraggable={true}
+          compactType={null}
+          preventCollision={true}
         >
           {widgets.map((widget) => (
             <div
               key={widget.id}
               onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
-              className="relative border hover:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md overflow-hidden"
+              className={`
+                relative border border-gray-200 transition-all duration-200
+                bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg
+                ${widget.isEditing ? 'ring-2 ring-blue-500' : 'hover:border-blue-500'}
+              `}
             >
               {renderWidget(widget)}
             </div>
