@@ -14,11 +14,11 @@ import { WidgetPanel } from '@/components/WidgetPanel';
 import { Canvas } from '@/components/Canvas';
 import { Widget, WidgetType } from '@/lib/types';
 import useWidgetStore from '@/lib/widgetStore';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Index = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { widgets, addWidget, updateWidget, deleteWidget, clearWidgets, undo, redo } = useWidgetStore();
 
   const sensors = useSensors(
@@ -107,12 +107,25 @@ const Index = () => {
           )}
         </button>
 
+        {/* Desktop Sidebar Toggle */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="hidden md:flex fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors items-center justify-center"
+          aria-label="Toggle sidebar"
+        >
+          {isSidebarOpen ? (
+            <ChevronLeft className="h-5 w-5 text-gray-600" />
+          ) : (
+            <ChevronRight className="h-5 w-5 text-gray-600" />
+          )}
+        </button>
+
         {/* Sidebar */}
         <aside
           className={`
-            fixed md:sticky top-0 left-0 h-full w-72
-            transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-            md:translate-x-0 transition-transform duration-200 ease-in-out
+            fixed md:sticky top-0 left-0 h-full
+            ${isSidebarOpen ? 'w-72' : 'w-0'}
+            transform transition-all duration-300 ease-in-out
             bg-white border-r border-gray-200 z-40 overflow-hidden
             flex flex-col
           `}
@@ -153,7 +166,10 @@ const Index = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 transition-all duration-200">
+        <main className={`
+          flex-1 transition-all duration-300
+          ${isSidebarOpen ? 'md:ml-0' : 'md:ml-0'}
+        `}>
           <Canvas
             widgets={widgets}
             onWidgetChange={updateWidget}
@@ -162,7 +178,7 @@ const Index = () => {
           />
         </main>
 
-        {/* Overlay for mobile */}
+        {/* Mobile Overlay */}
         {isSidebarOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"

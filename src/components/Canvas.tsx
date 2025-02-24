@@ -135,12 +135,23 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
               key={widget.id}
               onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
               className={`
-                relative border border-gray-200 transition-all duration-200
+                group relative border border-gray-200 transition-all duration-200
                 bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg
                 ${widget.isEditing ? 'ring-2 ring-blue-500' : 'hover:border-blue-500'}
               `}
             >
               {renderWidget(widget)}
+              <style>
+                {`
+                  .group:hover .react-resizable-handle {
+                    opacity: 1;
+                  }
+                  .react-resizable-handle {
+                    opacity: 0;
+                    transition: opacity 0.2s ease-in-out;
+                  }
+                `}
+              </style>
             </div>
           ))}
         </GridLayout>
