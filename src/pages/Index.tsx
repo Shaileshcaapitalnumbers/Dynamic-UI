@@ -79,11 +79,14 @@ const Index = () => {
       case 'image':
         return { url: '', alt: '' };
       case 'button':
-        return { text: '', variant: 'primary' };
+        return { text: '', variant: 'primary' as const };
       case 'table':
-        return { rows: [[{ type: 'text', content: '' }]], columns: 1 };
+        return {
+          rows: [[{ type: 'text' as const, content: '' }]],
+          columns: 1
+        };
       default:
-        return {};
+        return { text: '' };
     }
   };
 
