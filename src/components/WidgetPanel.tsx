@@ -48,9 +48,7 @@ const DraggableWidget = ({ type, label }: DraggableWidgetProps) => {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md 
-                transition-all duration-200 cursor-move
-                hover:border-blue-500 active:scale-95"
+      className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow cursor-move"
       style={style}
     >
       <span className="font-medium text-gray-700">{label}</span>
