@@ -51,13 +51,24 @@ const Index = () => {
       const type = active.data.current?.type as WidgetType;
       if (!type) return;
 
+      // Calculate next position based on existing widgets
+      const existingPositions = widgets.map(w => w.position);
+      let nextY = 0;
+      
+      if (existingPositions.length > 0) {
+        // Find the maximum Y position
+        const maxY = Math.max(...existingPositions.map(p => p.y));
+        nextY = maxY + 2; // Add some spacing between widgets
+      }
+
       const newWidget: Widget = {
         id: nanoid(),
         type,
         content: getDefaultContent(type),
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: nextY },
         isEditing: true,
-        style: getDefaultStyle(type)
+        style: getDefaultStyle(type),
+        size: getDefaultSize(type)
       };
 
       addWidget(newWidget);
@@ -90,6 +101,21 @@ const Index = () => {
         };
       default:
         return { text: '' };
+    }
+  };
+
+  const getDefaultSize = (type: WidgetType) => {
+    switch (type) {
+      case 'image':
+        return { w: 6, h: 8 };
+      case 'table':
+        return { w: 8, h: 6 };
+      case 'text':
+        return { w: 4, h: 3 };
+      case 'button':
+        return { w: 3, h: 2 };
+      default:
+        return { w: 4, h: 2 };
     }
   };
 

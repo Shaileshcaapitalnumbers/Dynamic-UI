@@ -1,5 +1,5 @@
 import { useDroppable } from '@dnd-kit/core';
-import { Widget, TextContent, ImageContent, ButtonContent, TableContent } from '@/lib/types';
+import { Widget, WidgetType, TextContent, ImageContent, ButtonContent, TableContent } from '@/lib/types';
 import { TextWidget } from './widgets/TextWidget';
 import { ImageWidget } from './widgets/ImageWidget';
 import { TableWidget } from './widgets/TableWidget';
@@ -99,11 +99,32 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
 
   const layout = widgets.map((widget) => ({
     i: widget.id,
-    x: widget.position.x || 0,
-    y: widget.position.y || 0,
-    w: widget.size?.w || 4,
-    h: widget.size?.h || getDefaultRowHeight(widget),
+    x: widget.position?.x || 0,
+    y: widget.position?.y || 0,
+    w: widget.size?.w || getDefaultSize(widget.type).w,
+    h: widget.size?.h || getDefaultSize(widget.type).h,
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    isDraggable: true,
+    isResizable: true,
   }));
+
+  const getDefaultSize = (type: WidgetType) => {
+    switch (type) {
+      case 'image':
+        return { w: 6, h: 8 };
+      case 'table':
+        return { w: 8, h: 6 };
+      case 'text':
+        return { w: 4, h: 3 };
+      case 'button':
+        return { w: 3, h: 2 };
+      default:
+        return { w: 4, h: 2 };
+    }
+  };
 
   return (
     <div className="min-h-screen p-4 md:p-6 lg:p-8">
@@ -123,33 +144,44 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           onLayoutChange={(newLayout) => {
             if (!isDragging) {
               newLayout.forEach((item) => {
-                onLayoutChange(
-                  item.i,
-                  { x: item.x, y: item.y },
-                  { w: item.w, h: item.h }
-                );
+                const widget = widgets.find(w => w.id === item.i);
+                if (widget) {
+                  const newPosition = { x: item.x, y: item.y };
+                  const newSize = { w: item.w, h: item.h };
+                  
+                  // Only update if position or size actually changed
+                  if (
+                    widget.position?.x !== newPosition.x ||
+                    widget.position?.y !== newPosition.y ||
+                    widget.size?.w !== newSize.w ||
+                    widget.size?.h !== newSize.h
+                  ) {
+                    onLayoutChange(item.i, newPosition, newSize);
+                  }
+                }
               });
             }
           }}
           onDragStart={() => setIsDragging(true)}
           onDragStop={() => {
             setIsDragging(false);
-            const currentLayout = layout.map((item) => ({
-              ...item,
-              isDragging: false,
-            }));
+            const currentLayout = layout;
             currentLayout.forEach((item) => {
-              onLayoutChange(
-                item.i,
-                { x: item.x, y: item.y },
-                { w: item.w, h: item.h }
-              );
+              const widget = widgets.find(w => w.id === item.i);
+              if (widget) {
+                onLayoutChange(
+                  item.i,
+                  { x: item.x, y: item.y },
+                  { w: item.w, h: item.h }
+                );
+              }
             });
           }}
           resizeHandles={['se']}
           isDraggable={true}
           compactType={null}
           preventCollision={true}
+          isResizable={true}
         >
           {widgets.map((widget) => (
             <div
