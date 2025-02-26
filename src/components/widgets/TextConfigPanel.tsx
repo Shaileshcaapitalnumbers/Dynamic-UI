@@ -54,6 +54,7 @@ export const TextConfigPanel = ({
     onClose();
   };
 
+  console.log((!text.trim() && !content.text.trim()),"content.text")
   return createPortal(
     <div 
       className={`fixed inset-0 z-50 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
@@ -186,7 +187,7 @@ export const TextConfigPanel = ({
 
         <div className="flex gap-3">
           <button
-            onClick={() => !text.trim() ? setShowWarning(true) : onClose()}
+            onClick={() => (!text.trim() && !content.text.trim()) ? setShowWarning(true) :( !content.text.trim()) ? setShowWarning(true): onClose()}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
             Cancel
