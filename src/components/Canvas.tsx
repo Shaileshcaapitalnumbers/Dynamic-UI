@@ -69,6 +69,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
             {...commonProps}
             content={widget.content as TableContent}
             onChange={(content) => onWidgetChange(widget.id, { content })}
+            onSizeChange={(size) => onLayoutChange(widget.id, widget.position, size)}
           />
         );
       case 'button':
@@ -108,7 +109,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     maxW: 12,
     maxH: 12,
     isDraggable: true,
-    isResizable: true,
+    isResizable: false,
   }));
 
   const getDefaultSize = (type: WidgetType) => {
@@ -143,10 +144,17 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           containerPadding={[20, 20]}
           onLayoutChange={(newLayout) => {
             if (!isDragging) {
-              newLayout.forEach((item) => {
+              // Sort the new layout by Y position
+              const sortedLayout = [...newLayout].sort((a, b) => a.y - b.y);
+              
+              // Update positions while maintaining order and preventing overlap
+              sortedLayout.forEach((item, index) => {
                 const widget = widgets.find(w => w.id === item.i);
                 if (widget) {
-                  const newPosition = { x: item.x, y: item.y };
+                  const newPosition = { 
+                    x: Math.max(0, Math.min(item.x, 12 - (widget.size?.w || 4))),
+                    y: index * 2 // Ensure consistent spacing between widgets
+                  };
                   const newSize = { w: item.w, h: item.h };
                   
                   // Only update if position or size actually changed
@@ -166,45 +174,39 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
           onDragStop={() => {
             setIsDragging(false);
             const currentLayout = layout;
-            currentLayout.forEach((item) => {
+            // Sort by Y position before updating
+            const sortedLayout = [...currentLayout].sort((a, b) => a.y - b.y);
+            sortedLayout.forEach((item, index) => {
               const widget = widgets.find(w => w.id === item.i);
               if (widget) {
                 onLayoutChange(
                   item.i,
-                  { x: item.x, y: item.y },
+                  { 
+                    x: Math.max(0, Math.min(item.x, 12 - (widget.size?.w || 4))),
+                    y: index * 2 // Maintain consistent spacing
+                  },
                   { w: item.w, h: item.h }
                 );
               }
             });
           }}
-          resizeHandles={['se']}
           isDraggable={true}
-          compactType={null}
-          preventCollision={true}
-          isResizable={true}
+          compactType="vertical"
+          preventCollision={false}
+          isResizable={false}
+          verticalCompact={true}
+          useCSSTransforms={true}
         >
           {widgets.map((widget) => (
             <div
               key={widget.id}
-              // onDoubleClick={() => onWidgetChange(widget.id, { isEditing: true })}
               className={`
                 group relative border border-gray-200 transition-all duration-200
                 bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg
-                ${widget.isEditing ? 'ring-2 ring-blue-500' : 'hover:border-blue-500'}
+                ${widget.isEditing ? 'border-gray-300' : 'hover:border-gray-300'}
               `}
             >
               {renderWidget(widget)}
-              <style>
-                {`
-                  .group:hover .react-resizable-handle {
-                    opacity: 1;
-                  }
-                  .react-resizable-handle {
-                    opacity: 0;
-                    transition: opacity 0.2s ease-in-out;
-                  }
-                `}
-              </style>
             </div>
           ))}
         </GridLayout>

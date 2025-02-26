@@ -1,4 +1,3 @@
-
 import { useDraggable } from '@dnd-kit/core';
 import { WidgetType } from '@/lib/types';
 
@@ -32,16 +31,10 @@ interface DraggableWidgetProps {
 }
 
 const DraggableWidget = ({ type, label }: DraggableWidgetProps) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef } = useDraggable({
     id: `widget-${type}`,
     data: { type },
   });
-
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
 
   return (
     <div
@@ -49,7 +42,6 @@ const DraggableWidget = ({ type, label }: DraggableWidgetProps) => {
       {...listeners}
       {...attributes}
       className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow cursor-move"
-      style={style}
     >
       <span className="font-medium text-gray-700">{label}</span>
     </div>

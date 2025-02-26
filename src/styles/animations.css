@@ -32,6 +32,11 @@
   cursor: grabbing;
 }
 
+.drag-overlay-item {
+  transition: none !important;
+  animation: none !important;
+}
+
 .widget-container {
   position: relative;
 }

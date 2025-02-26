@@ -21,6 +21,7 @@ export interface ImageContent {
 export interface ButtonContent {
   text: string;
   variant: 'primary' | 'secondary' | 'outline';
+  url?: string;
 }
 
 export interface TableContent {
@@ -35,6 +36,9 @@ export interface WidgetStyle {
   borderWidth: string;
   borderRadius: string;
   padding: string;
+  textAlign?: 'left' | 'center' | 'right';
+  fontSize?: string;
+  fontWeight?: 'normal' | 'bold';
 }
 
 export interface Widget {
