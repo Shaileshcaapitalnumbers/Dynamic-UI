@@ -66,7 +66,7 @@ export const TableSetupDialog = ({ onConfirm, onCancel }: TableSetupDialogProps)
               <input
                 type="number"
                 min="1"
-                // max="3" // Max 3 columns (4 units each = 12 total)
+                max="10" // Max 3 columns (4 units each = 12 total)
                 value={columns}
                 onChange={(e) => {
                   const value = Math.max(1, Math.min(12, parseInt(e.target.value) || 1));
