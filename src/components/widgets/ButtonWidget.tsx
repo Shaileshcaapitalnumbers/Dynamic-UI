@@ -56,7 +56,7 @@ export const ButtonWidget = ({
         onMouseDown={handleMouseDown}
         onClick={handleClick}
       >
-        <span>{content.text || 'Button'}</span>
+        <span>{content.text || ''}</span>
       </button>
 
       {/* Edit/Delete Controls */}
@@ -86,6 +86,7 @@ export const ButtonWidget = ({
           onStyleChange={onStyleChange}
           onClose={() => setShowConfig(false)}
           buttonRef={buttonRef}
+          onRemove={onDelete}
         />
       )}
     </div>

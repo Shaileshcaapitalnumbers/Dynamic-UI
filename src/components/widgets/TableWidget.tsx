@@ -414,7 +414,7 @@ export const TableWidget = ({
                       {row.map((cell, colIndex) => (
                         <div
                           key={`cell-${rowIndex}-${colIndex}`}
-                          className="relative group/cell border-2 border-gray-300"
+                          className="relative group/cell border border-gray-300"
                           style={{
                             width: `${100 / content.columns}%`,
                             minHeight: '2rem'
