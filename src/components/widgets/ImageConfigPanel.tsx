@@ -24,7 +24,7 @@ export const ImageConfigPanel = ({
   const panelRef = useRef<HTMLDivElement>(null);
   const [imageUrl, setImageUrl] = useState(content.url || '');
   const { position, isVisible } = useConfigPanelPosition(buttonRef, panelRef);
-
+  const [showWarning, setShowWarning] = useState(false);
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -46,16 +46,47 @@ export const ImageConfigPanel = ({
     }
     onClose();
   };
-
+  const handleRemove = () => {
+    onRemove();
+    onClose();
+  };
   return createPortal(
     <div 
       className={`fixed inset-0 z-50 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          onClose();
+          if (!imageUrl.trim()) {
+            setShowWarning(true);
+          } else {
+            onClose();
+          }
         }
       }}
     >
+       {showWarning && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+            <h3 className="text-lg font-semibold mb-4">Empty Image Warning</h3>
+            <p className="text-gray-600 mb-6">
+              The image field is empty. If you proceed, the widget will be removed.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowWarning(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRemove}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Remove Widget
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div
         ref={panelRef}
         className={`absolute bg-white rounded-lg shadow-lg w-96 p-6 transition-transform duration-200 ${isVisible ? 'translate-y-0' : 'translate-y-2'}`}
@@ -122,7 +153,7 @@ export const ImageConfigPanel = ({
         {/* Action Buttons */}
         <div className="flex gap-3">
           <button
-            onClick={onClose}
+              onClick={() => !imageUrl.trim() ? setShowWarning(true) : onClose()}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
             Cancel

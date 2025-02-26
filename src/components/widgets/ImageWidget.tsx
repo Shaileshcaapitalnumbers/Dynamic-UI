@@ -57,7 +57,7 @@ export const ImageWidget = ({
   return (
     <div ref={containerRef} className="relative w-full h-full group">
       {/* Image Display */}
-      <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden">
+      <div className="w-full h-full flex items-center justify-center hover:bg-gray-50 rounded-lg overflow-hidden">
         {content.url ? (
           <img
             ref={imageRef}
