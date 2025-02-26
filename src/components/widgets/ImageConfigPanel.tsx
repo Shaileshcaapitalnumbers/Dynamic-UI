@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ImageContent, WidgetStyle } from '@/lib/types';
 import { X, Upload } from 'lucide-react';
