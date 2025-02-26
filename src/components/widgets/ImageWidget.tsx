@@ -22,7 +22,7 @@ export const ImageWidget = ({
   isEditing,
   onEditingChange
 }: ImageWidgetProps) => {
-  const [showConfig, setShowConfig] = useState(isEditing?true:false);
+  const [showConfig, setShowConfig] = useState(isEditing && !content.url);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { TableContent } from '@/lib/types';
-import { Edit, Save, Trash, Plus, MinusCircle, Image as ImageIcon, Type } from 'lucide-react';
+import { Edit, Save, Trash, Plus, MinusCircle, Image as ImageIcon, Type, X } from 'lucide-react';
 import { TableCellConfigPanel } from './TableCellConfigPanel';
 import { TableSetupDialog } from './TableSetupDialog';
 import { createPortal } from 'react-dom';
@@ -42,7 +42,9 @@ const CellEditor = ({
 }: CellEditorProps) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [type, setType] = useState<'text' | 'image'>(content.type);
-  const [value, setValue] = useState(content.content);
+  const [valueText, setValueText] = useState(content.type ==="text"?content.content:"");
+  const [valueImage, setValueImage] = useState(content.type ==="image"?content.content:"");
+
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const CellEditor = ({
   }, [containerRef]);
 
   const handleSave = () => {
-    onChange({ type, content: value });
+    onChange({ type, content:type === 'text'? valueText:valueImage });
     onClose();
   };
 
@@ -76,7 +78,8 @@ const CellEditor = ({
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold">Edit Cell {cellId}</h3>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            <MinusCircle className="w-5 h-5" />
+            {/* <MinusCircle className="w-5 h-5" /> */}
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -98,8 +101,8 @@ const CellEditor = ({
 
           {type === 'text' ? (
             <textarea
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              value={valueText}
+              onChange={(e) => setValueText(e.target.value)}
               className="w-full p-2 border rounded-md focus:ring-1 focus:ring-gray-300 focus:border-transparent"
               rows={3}
               placeholder="Enter text..."
@@ -107,8 +110,8 @@ const CellEditor = ({
           ) : (
             <input
               type="text"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              value={valueImage}
+              onChange={(e) => setValueImage(e.target.value)}
               className="w-full p-2 border rounded-md focus:ring-1 focus:ring-gray-300 focus:border-transparent"
               placeholder="Enter image URL..."
             />
@@ -199,7 +202,18 @@ const TableControlPanel = ({
     document.body
   );
 };
+export interface TextStyle {
+  fontSize?: string;
+  color?: string;
+  isBold?: boolean;
+  isItalic?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+}
 
+export interface TextContent {
+  text: string;
+  style?: TextStyle;
+}
 export const TableWidget = ({
   content,
   onChange,
@@ -210,7 +224,7 @@ export const TableWidget = ({
   onEditingChange,
   onSizeChange
 }: TableWidgetProps) => {
-  const [showSetup, setShowSetup] = useState(true);
+  const [showSetup, setShowSetup] = useState(!content.rows || content.rows.length === 0);
   const [editMode, setEditMode] = useState(false);
   const [editingCell, setEditingCell] = useState<{ id: string; row: number; col: number } | null>(null);
   const [showControls, setShowControls] = useState(false);
@@ -229,6 +243,19 @@ export const TableWidget = ({
       row.forEach(cell => {
         if (cell.type === 'image' && cell.content) {
           rowHeight = Math.max(rowHeight, 2); // Increase height for rows with images
+        }
+        if (cell.type === 'text' && cell.content) {
+          const content = cell.content as any;
+          const text = content || '';
+          const fontSize =  16;
+          const lineHeight = 1.5;
+          const padding = 32; // 2rem (p-4 * 2)
+          const linesOfText = Math.ceil(text.length / 3); // Rough estimate of characters per line
+          
+
+
+          const estimatedHeight = Math.max(2, Math.ceil((fontSize * lineHeight * linesOfText + padding) / 30));
+          rowHeight = estimatedHeight 
         }
       });
       maxRowHeight += rowHeight;
@@ -259,7 +286,7 @@ export const TableWidget = ({
     if (onSizeChange) {
       onSizeChange(newDimensions);
     }
-  }, [content.rows?.length, content.columns]);
+  }, [content.rows?.length, content.columns,editingCell]);
 
   // Check if content is empty to show setup
   useEffect(() => {
@@ -271,7 +298,7 @@ export const TableWidget = ({
     if (onEditingChange) {
       onEditingChange(editMode || showSetup || editingCell !== null);
     }
-  }, [editMode, showSetup, editingCell, onEditingChange]);
+  }, [editMode, showSetup, editingCell]);
 
   const handleSetupConfirm = (rows: number, columns: number) => {
     const newRows = Array(rows)

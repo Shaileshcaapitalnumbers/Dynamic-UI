@@ -22,7 +22,7 @@ export const ButtonWidget = ({
   isEditing,
   onEditingChange 
 }: ButtonWidgetProps) => {
-  const [showConfig, setShowConfig] = useState(isEditing?true:false);
+  const [showConfig, setShowConfig] = useState(isEditing && !content.text);
   const buttonRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const mouseDownTimeRef = useRef(0);
