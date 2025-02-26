@@ -216,7 +216,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
               key={widget.id}
               className={`
                 group relative  transition-all duration-200
-                bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg
+                bg-white shadow-sm hover:shadow-md overflow-hidden rounded-lg 
                 ${widget.isEditing ? 'border-gray-300' : 'hover:border-gray-300'}
               `}
             >
