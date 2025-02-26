@@ -369,7 +369,7 @@ export const TableWidget = ({
   };
 
   const getCellId = (rowIndex: number, colIndex: number) => {
-    return `Row${rowIndex + 1}Column${colIndex + 1}`;
+    return `Row-${rowIndex + 1} Column-${colIndex + 1}`;
   };
 
   return (
