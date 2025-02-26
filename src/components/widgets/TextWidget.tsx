@@ -37,7 +37,7 @@ export const TextWidget = ({
     if (onEditingChange) {
       onEditingChange(showConfig);
     }
-  }, [showConfig, onEditingChange]);
+  }, [showConfig]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full group">
@@ -58,10 +58,10 @@ export const TextWidget = ({
       </div>
 
       {/* Control Buttons */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2 border border-gray-300">
         <button
           onClick={() => setShowConfig(true)}
-          className="p-1.5 bg-white shadow-sm text-gray-600 rounded-md hover:bg-gray-50 transition-colors"
+          className="p-1.5 bg-white shadow-sm text-gray-600 rounded-md hover:bg-gray-50 transition-colors "
           title="Edit text"
         >
           <Edit className="w-4 h-4" />
