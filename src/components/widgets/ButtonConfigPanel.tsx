@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { ButtonContent, WidgetStyle } from '@/lib/types';
 import { X } from 'lucide-react';
+import { useConfigPanelPosition } from '@/hooks/useConfigPanelPosition';
 
 interface ButtonConfigPanelProps {
   content: ButtonContent;
@@ -21,37 +22,11 @@ export const ButtonConfigPanel = ({
   buttonRef,
 }: ButtonConfigPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ left: 0, top: 0 });
-
-  useEffect(() => {
-    if (!buttonRef.current || !panelRef.current) return;
-
-    const buttonRect = buttonRef.current.getBoundingClientRect();
-    const panelRect = panelRef.current.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    
-    // Check if there's space on the right
-    const spaceOnRight = viewportWidth - buttonRect.right > panelRect.width + 20;
-    
-    // Position the panel
-    if (spaceOnRight) {
-      // Place on the right
-      setPosition({
-        left: buttonRect.right + 16,
-        top: buttonRect.top,
-      });
-    } else {
-      // Place on the left
-      setPosition({
-        left: buttonRect.left - panelRect.width - 16,
-        top: buttonRect.top,
-      });
-    }
-  }, [buttonRef]);
+  const { position, isVisible } = useConfigPanelPosition(buttonRef, panelRef);
 
   return createPortal(
     <div 
-      className="fixed inset-0 z-50"
+      className={`fixed inset-0 z-50 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -60,11 +35,12 @@ export const ButtonConfigPanel = ({
     >
       <div
         ref={panelRef}
-        className="absolute bg-white rounded-lg shadow-lg w-96 p-6"
+        className={`absolute bg-white rounded-lg shadow-lg w-96 p-6 transition-transform duration-200 ${isVisible ? 'translate-y-0' : 'translate-y-2'}`}
         style={{
           left: position.left,
           top: position.top,
         }}
+        onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Button Settings</h3>
@@ -76,7 +52,6 @@ export const ButtonConfigPanel = ({
           </button>
         </div>
 
-        {/* Button Text */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Button Text
@@ -90,7 +65,6 @@ export const ButtonConfigPanel = ({
           />
         </div>
 
-        {/* URL Link */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             URL Link
@@ -104,7 +78,6 @@ export const ButtonConfigPanel = ({
           />
         </div>
 
-        {/* Background Color */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Background Color
@@ -126,7 +99,6 @@ export const ButtonConfigPanel = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
@@ -145,4 +117,4 @@ export const ButtonConfigPanel = ({
     </div>,
     document.body
   );
-}; 
+};

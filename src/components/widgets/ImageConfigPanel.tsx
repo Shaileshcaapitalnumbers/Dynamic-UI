@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { ImageContent, WidgetStyle } from '@/lib/types';
 import { X, Upload } from 'lucide-react';
+import { useConfigPanelPosition } from '@/hooks/useConfigPanelPosition';
 
 interface ImageConfigPanelProps {
   content: ImageContent;
@@ -21,44 +22,8 @@ export const ImageConfigPanel = ({
   buttonRef,
 }: ImageConfigPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ left: 0, top: 0 });
   const [imageUrl, setImageUrl] = useState(content.url || '');
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // Set initial position off-screen
-    setPosition({ left: -9999, top: -9999 });
-    
-    // Add small delay to allow for initial render
-    const timer = setTimeout(() => {
-      if (!buttonRef.current || !panelRef.current) return;
-
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const panelRect = panelRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      
-      // Check if there's space on the right
-      const spaceOnRight = viewportWidth - buttonRect.right > panelRect.width + 20;
-      
-      // Position the panel
-      if (spaceOnRight) {
-        setPosition({
-          left: buttonRect.right + 16,
-          top: buttonRect.top,
-        });
-      } else {
-        setPosition({
-          left: buttonRect.left - panelRect.width - 16,
-          top: buttonRect.top,
-        });
-      }
-      
-      // Show panel after positioning
-      setIsVisible(true);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [buttonRef]);
+  const { position, isVisible } = useConfigPanelPosition(buttonRef, panelRef);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -173,4 +138,4 @@ export const ImageConfigPanel = ({
     </div>,
     document.body
   );
-}; 
+};

@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { TextContent, WidgetStyle } from '@/lib/types';
 import { X, AlignLeft, AlignCenter, AlignRight, Bold, Type } from 'lucide-react';
+import { useConfigPanelPosition } from '@/hooks/useConfigPanelPosition';
 
 interface TextConfigPanelProps {
   content: TextContent;
@@ -23,48 +24,12 @@ export const TextConfigPanel = ({
   buttonRef,
 }: TextConfigPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ left: 0, top: 0 });
   const [text, setText] = useState(content.text || '');
-  const [isVisible, setIsVisible] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [textAlign, setTextAlign] = useState(style.textAlign || 'left');
   const [fontSize, setFontSize] = useState(style.fontSize || '16px');
   const [isBold, setIsBold] = useState(style.fontWeight === 'bold');
-
-  useEffect(() => {
-    // Set initial position off-screen
-    setPosition({ left: -9999, top: -9999 });
-    
-    // Add small delay to allow for initial render
-    const timer = setTimeout(() => {
-      if (!buttonRef.current || !panelRef.current) return;
-
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const panelRect = panelRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      
-      // Check if there's space on the right
-      const spaceOnRight = viewportWidth - buttonRect.right > panelRect.width + 20;
-      
-      // Position the panel
-      if (spaceOnRight) {
-        setPosition({
-          left: buttonRect.right + 16,
-          top: buttonRect.top,
-        });
-      } else {
-        setPosition({
-          left: buttonRect.left - panelRect.width - 16,
-          top: buttonRect.top,
-        });
-      }
-      
-      // Show panel after positioning
-      setIsVisible(true);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [buttonRef]);
+  const { position, isVisible } = useConfigPanelPosition(buttonRef, panelRef);
 
   const handleSave = () => {
     if (!text.trim()) {
@@ -146,7 +111,6 @@ export const TextConfigPanel = ({
           </button>
         </div>
 
-        {/* Text Input */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Text Content
@@ -159,9 +123,7 @@ export const TextConfigPanel = ({
           />
         </div>
 
-        {/* Formatting Options */}
         <div className="space-y-4 mb-6">
-          {/* Text Alignment */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Alignment
@@ -191,7 +153,6 @@ export const TextConfigPanel = ({
             </div>
           </div>
 
-          {/* Font Size */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Font Size
@@ -212,7 +173,6 @@ export const TextConfigPanel = ({
             </div>
           </div>
 
-          {/* Bold Toggle */}
           <div>
             <button
               onClick={() => setIsBold(!isBold)}
@@ -224,7 +184,6 @@ export const TextConfigPanel = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex gap-3">
           <button
             onClick={() => !text.trim() ? setShowWarning(true) : onClose()}
@@ -243,4 +202,4 @@ export const TextConfigPanel = ({
     </div>,
     document.body
   );
-}; 
+};
