@@ -66,6 +66,13 @@ export const TextWidget = ({
         >
           <Edit className="w-4 h-4" />
         </button>
+        <button
+          onClick={() => onDelete()}
+          className="p-1.5 bg-white shadow-sm text-gray-600 rounded-md hover:bg-gray-50 transition-colors "
+          title="Edit text"
+        >
+          <Trash className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Configuration Panel */}
