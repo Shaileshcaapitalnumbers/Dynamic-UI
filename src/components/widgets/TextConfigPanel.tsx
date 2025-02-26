@@ -54,16 +54,14 @@ export const TextConfigPanel = ({
     onClose();
   };
 
-  console.log((!text.trim() && !content.text.trim()),"content.text")
   return createPortal(
     <div 
       className={`fixed inset-0 z-50 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           if (!text.trim()) {
-            setShowWarning(true);
-          } else {
-            onClose();
+            
+            handleRemove();
           }
         }
       }}
@@ -161,13 +159,18 @@ export const TextConfigPanel = ({
             <div className="flex items-center gap-3">
               <Type className="w-5 h-5 text-gray-400" />
               <input
-                type="range"
-                min="12"
-                max="32"
-                value={parseInt(fontSize)}
-                onChange={(e) => setFontSize(`${e.target.value}px`)}
-                className="flex-1"
-              />
+  type="number"
+  min="6"
+  max="32"
+  maxLength={2}
+  value={parseInt(fontSize)}
+  onChange={(e) =>{ 
+    if(parseInt(e.target.value)<=32){
+    setFontSize(`${e.target.value}px`)
+    }
+  }}
+  className="flex-1 w-5 border p-1 rounded-md text-center"
+/>
               <span className="text-sm text-gray-600 min-w-[3ch]">
                 {parseInt(fontSize)}
               </span>

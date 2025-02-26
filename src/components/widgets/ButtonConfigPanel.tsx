@@ -37,9 +37,7 @@ export const ButtonConfigPanel = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           if (!content.text.trim()) {
-            setShowWarning(true);
-          } else {
-            onClose();
+            handleRemove()
           }
         }
       }}

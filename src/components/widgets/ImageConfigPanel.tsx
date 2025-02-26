@@ -56,9 +56,7 @@ export const ImageConfigPanel = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           if (!imageUrl.trim()) {
-            setShowWarning(true);
-          } else {
-            onClose();
+            handleRemove()
           }
         }
       }}

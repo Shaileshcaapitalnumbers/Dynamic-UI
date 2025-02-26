@@ -449,7 +449,7 @@ export const TableWidget = ({
                           <div className="p-2">
                             {cell.type === 'text' ? (
                               <p className="break-words text-sm ">
-                                {cell.content || (editMode ? 'Click to edit' : '')}
+                                {cell.content || (editMode ? '' : '')}
                               </p>
                             ) : (
                               cell.content && (
