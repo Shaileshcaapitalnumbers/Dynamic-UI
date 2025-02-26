@@ -183,13 +183,13 @@ const TableControlPanel = ({
           <Plus className="w-4 h-4" />
           <span>Add Row</span>
         </button>
-        {currentColumns * 2 < maxColumns && (
+        {currentColumns < maxColumns && (
           <button
             onClick={() => onAddColumn()}
             className="w-full px-3 py-2 text-left hover:bg-gray-50 rounded flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            <span>Add Column</span>
+            <span>Add Column (max 10)</span>
           </button>
         )}
         <button
@@ -504,7 +504,7 @@ export const TableWidget = ({
           onAddColumn={handleAddColumn}
           onClose={() => setShowControls(false)}
           containerRef={tableRef}
-          maxColumns={12}
+          maxColumns={10}
           currentColumns={content.columns}
         />
       )}
