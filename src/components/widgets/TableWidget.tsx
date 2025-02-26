@@ -4,6 +4,7 @@ import { Edit, Save, Trash, Plus, MinusCircle, Image as ImageIcon, Type, X } fro
 import { TableCellConfigPanel } from './TableCellConfigPanel';
 import { TableSetupDialog } from './TableSetupDialog';
 import { createPortal } from 'react-dom';
+import { useConfigPanelPosition } from '@/hooks/useConfigPanelPosition';
 
 interface TableWidgetProps {
   content: TableContent;
@@ -146,9 +147,9 @@ const TableControlPanel = ({
   maxColumns,
   currentColumns
 }: TableControlPanelProps) => {
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  // const [position, setPosition] = useState({ top: 0, left: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
-
+  const { position, isVisible } = useConfigPanelPosition(containerRef, panelRef);
   useEffect(() => {
     if (!containerRef.current || !panelRef.current) return;
 
@@ -160,12 +161,12 @@ const TableControlPanel = ({
     const spaceBelow = viewportHeight - containerRect.bottom;
     const spaceAbove = containerRect.top;
 
-    setPosition({
-      top: spaceBelow > spaceAbove 
-        ? containerRect.bottom + 16 
-        : containerRect.top - panelRect.height - 16,
-      left: containerRect.left
-    });
+    // setPosition({
+    //   top: spaceBelow > spaceAbove 
+    //     ? containerRect.bottom + 16 
+    //     : containerRect.top - panelRect.height - 16,
+    //   left: containerRect.left
+    // });
   }, [containerRef]);
 
   return createPortal(
@@ -247,15 +248,12 @@ export const TableWidget = ({
         if (cell.type === 'text' && cell.content) {
           const content = cell.content as any;
           const text = content || '';
-          const fontSize =  16;
-          const lineHeight = 1.5;
-          const padding = 32; // 2rem (p-4 * 2)
-          const linesOfText = Math.ceil(text.length / 3); // Rough estimate of characters per line
-          
-
-
-          const estimatedHeight = Math.max(2, Math.ceil((fontSize * lineHeight * linesOfText + padding) / 30));
-          rowHeight = estimatedHeight 
+          const fontSize =  6;
+          const lineHeight = 0.8;
+          const padding = 10; // 2rem (p-4 * 2)
+          const linesOfText = Math.ceil(text.length / 6); // Rough estimate of characters per line
+          const estimatedHeight = Math.max(2, Math.ceil((fontSize  * linesOfText + padding) / 30));
+          rowHeight = estimatedHeight
         }
       });
       maxRowHeight += rowHeight;
@@ -283,6 +281,7 @@ export const TableWidget = ({
   // Update dimensions when content changes
   useEffect(() => {
     const newDimensions = calculateTableDimensions();
+    console.log(newDimensions,"newDimensions")
     if (onSizeChange) {
       onSizeChange(newDimensions);
     }
@@ -370,7 +369,7 @@ export const TableWidget = ({
   };
 
   const getCellId = (rowIndex: number, colIndex: number) => {
-    return `R${rowIndex + 1}C${colIndex + 1}`;
+    return `Row${rowIndex + 1}Column${colIndex + 1}`;
   };
 
   return (
