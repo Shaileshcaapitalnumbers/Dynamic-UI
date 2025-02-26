@@ -25,13 +25,13 @@ const Index = () => {
     useSensor(MouseSensor, {
       activationConstraint: {
         distance: 20,
-        delay: 150,
+        delay: 10,
         tolerance: 5,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 300,
+        delay: 10,
         tolerance: 8,
       },
     })
