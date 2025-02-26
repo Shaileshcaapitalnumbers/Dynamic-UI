@@ -36,6 +36,20 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
+  const calculateTextHeight = (widget: Widget) => {
+    if (widget.type === 'text') {
+      const content = widget.content as TextContent;
+      const text = content.text || '';
+      const fontSize = widget.style?.fontSize ? parseInt(widget.style.fontSize) : 16;
+      const lineHeight = 1.5;
+      const padding = 32; // 2rem (p-4 * 2)
+      const linesOfText = Math.ceil(text.length / 50); // Rough estimate of characters per line
+      const estimatedHeight = Math.max(2, Math.ceil((fontSize * lineHeight * linesOfText + padding) / 30));
+      return estimatedHeight;
+    }
+    return widget.size?.h || getDefaultSize(widget.type).h;
+  };
+
   const renderWidget = (widget: Widget) => {
     const commonProps = {
       onDelete: () => onWidgetDelete(widget.id),
@@ -103,7 +117,7 @@ export const Canvas = ({ widgets, onWidgetChange, onWidgetDelete, onLayoutChange
     x: widget.position?.x || 0,
     y: widget.position?.y || 0,
     w: widget.size?.w || getDefaultSize(widget.type).w,
-    h: widget.size?.h || getDefaultSize(widget.type).h,
+    h: calculateTextHeight(widget),
     minW: 2,
     minH: 2,
     maxW: 12,
