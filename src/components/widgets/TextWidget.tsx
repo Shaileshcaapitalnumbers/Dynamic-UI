@@ -58,7 +58,7 @@ export const TextWidget = ({
       </div>
 
       {/* Control Buttons */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2 border border-gray-300">
+      <div className="absolute -top-2 -right-0 flex items-center gap-2 bg-white p-1.5 rounded-lg shadow-md z-[100] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <button
           onClick={() => setShowConfig(true)}
           className="p-1.5 bg-white shadow-sm text-gray-600 rounded-md hover:bg-gray-50 transition-colors "
@@ -68,7 +68,7 @@ export const TextWidget = ({
         </button>
         <button
           onClick={() => onDelete()}
-          className="p-1.5 bg-white shadow-sm text-gray-600 rounded-md hover:bg-gray-50 transition-colors "
+          className="p-1.5 bg-white border border-gray-200 text-red-500 rounded-md hover:bg-red-50 transition-colors flex items-center justify-center"
           title="Edit text"
         >
           <Trash className="w-4 h-4" />
